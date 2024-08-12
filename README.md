@@ -1,7 +1,7 @@
 <div align="center">
-  <a href="https://v2.nonebot.dev/store"><img src="https://github.com/A-kirami/nonebot-plugin-fakepic/blob/resources/nbp_logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
+  <a href="https://v2.nonebot.dev/store"><img src="https://github.com/A-kirami/nonebot-plugin-template/blob/resources/nbp_logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
   <br>
-  <p><img src="https://github.com/A-kirami/nonebot-plugin-fakepic/blob/resources/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText"></p>
+  <p><img src="https://github.com/A-kirami/nonebot-plugin-template/blob/resources/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText"></p>
 </div>
 
 <div align="center">
@@ -74,5 +74,5 @@ nonebot2插件，使用pillow库进行图片绘制
 | {QQ号}说{消息内容} | 无 | 否 | 私聊/群聊 | on_regex触发 |
 ### 效果图
 如果有效果图的话
-![command.jpg](https://github.com/lm175/nonebot-plugin-fakepic.git/preview/command.jpg "效果图")
-![result.jpg](https://github.com/lm175/nonebot-plugin-fakepic.git/preview/result.jpg "效果图")
+![command.jpg](https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/command.jpg "效果图")
+![result.jpg](https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/result.jpg "效果图")
