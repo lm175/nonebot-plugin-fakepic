@@ -1,8 +1,6 @@
 from nonebot.plugin import on_regex
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message, MessageSegment
 from nonebot.log import logger
-
-from pil_utils import Text2Image, BuildImage
 from io import BytesIO
 import re, asyncio, html
 
@@ -12,8 +10,9 @@ FONT = res_path / "arial.ttf"
 BOT = res_path / "bot_icon.png"
 LEVEL = res_path / "level_icon.png"
 
-from httpx import AsyncClient
 
+from pil_utils import Text2Image, BuildImage
+from httpx import AsyncClient
 from .config import config
 
 class SeparateMsg:
@@ -209,5 +208,3 @@ async def handle(bot: Bot, event: MessageEvent):
     
     pic = await asyncio.to_thread(draw_pic, sep_list)
     await matcher.send(MessageSegment.image(pic))
-
-
