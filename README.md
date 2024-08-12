@@ -1,7 +1,7 @@
 <div align="center">
-  <a href="https://v2.nonebot.dev/store"><img src="https://github.com/A-kirami/nonebot-plugin-template/blob/resources/nbp_logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
+  <a href="https://v2.nonebot.dev/store"><img src="https://github.com/A-kirami/nonebot-plugin-fakepic/blob/resources/nbp_logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
   <br>
-  <p><img src="https://github.com/A-kirami/nonebot-plugin-template/blob/resources/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText"></p>
+  <p><img src="https://github.com/A-kirami/nonebot-plugin-fakepic/blob/resources/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText"></p>
 </div>
 
 <div align="center">
@@ -12,10 +12,10 @@ _✨ NoneBot伪造聊天截图插件 ✨_
 
 
 <a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/owner/nonebot-plugin-template.svg" alt="license">
+    <img src="https://img.shields.io/github/license/owner/nonebot-plugin-fakepic.svg" alt="license">
 </a>
-<a href="https://pypi.python.org/pypi/nonebot-plugin-template">
-    <img src="https://img.shields.io/pypi/v/nonebot-plugin-template.svg" alt="pypi">
+<a href="https://pypi.python.org/pypi/nonebot-plugin-fakepic">
+    <img src="https://img.shields.io/pypi/v/nonebot-plugin-fakepic.svg" alt="pypi">
 </a>
 <img src="https://img.shields.io/badge/python-3.9+-blue.svg" alt="python">
 
@@ -49,22 +49,22 @@ nonebot2插件，使用pillow库进行图片绘制
 <details>
 <summary>pip</summary>
 
-    pip install nonebot-plugin-template
+    pip install nonebot-plugin-fakepic
 </details>
 <details>
 <summary>pdm</summary>
 
-    pdm add nonebot-plugin-template
+    pdm add nonebot-plugin-fakepic
 </details>
 <details>
 <summary>poetry</summary>
 
-    poetry add nonebot-plugin-template
+    poetry add nonebot-plugin-fakepic
 </details>
 <details>
 <summary>conda</summary>
 
-    conda install nonebot-plugin-template
+    conda install nonebot-plugin-fakepic
 </details>
 
 打开 nonebot2 项目根目录下的 `pyproject.toml` 文件, 在 `[tool.nonebot]` 部分追加写入
