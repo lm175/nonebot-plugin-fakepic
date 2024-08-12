@@ -10,7 +10,6 @@ FONT = res_path / "arial.ttf"
 BOT = res_path / "bot_icon.png"
 LEVEL = res_path / "level_icon.png"
 
-
 from pil_utils import Text2Image, BuildImage
 from httpx import AsyncClient
 from .config import config
@@ -171,7 +170,9 @@ async def trans_to_list(bot: Bot, msg: Message) -> list:
             at_id_list = re.findall(r'\[CQ:at,qq=(\d+)\]', text)
             for at_id in at_id_list:
                 at_nick = await get_user_name(bot, int(at_id))
-                text = re.sub(r'\[CQ:at,qq=(\d+)\]', f'@{at_nick} ', text, 1)
+                text = re.sub(r'\[CQ:at,qq=\d+\]', f'@{at_nick} ', text, 1)
+            if config.fakepic_del_cqface:
+                text = re.sub(r'\[CQ:face,id=\d+\]', '', text)
             m['text'] = html.unescape(text)
             for index, url in enumerate(m['images']):
                 async with AsyncClient() as cli:
@@ -208,3 +209,5 @@ async def handle(bot: Bot, event: MessageEvent):
     
     pic = await asyncio.to_thread(draw_pic, sep_list)
     await matcher.send(MessageSegment.image(pic))
+
+
