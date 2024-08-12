@@ -12,7 +12,7 @@ _✨ NoneBot伪造聊天截图插件 ✨_
 
 
 <a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/owner/nonebot-plugin-fakepic.svg" alt="license">
+    <img src="https://img.shields.io/github/license/lm175/nonebot-plugin-fakepic.svg" alt="license">
 </a>
 <a href="https://pypi.python.org/pypi/nonebot-plugin-fakepic">
     <img src="https://img.shields.io/pypi/v/nonebot-plugin-fakepic.svg" alt="pypi">
