@@ -73,6 +73,5 @@ nonebot2插件，使用pillow库进行图片绘制
 |:-----:|:----:|:----:|:----:|:----:|
 | {QQ号}说{消息内容} | 无 | 否 | 私聊/群聊 | on_regex触发 |
 ### 效果图
-如果有效果图的话
 ![command.jpg](https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/command.jpg "效果图")
 ![result.jpg](https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/result.png "效果图")
