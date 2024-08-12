@@ -12,7 +12,7 @@ _✨ NoneBot伪造聊天截图插件 ✨_
 
 
 <a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/lm175/nonebot-plugin-fakepic.svg" alt="license">
+    <img src="https://img.shields.io/github/license/owner/nonebot-plugin-fakepic.svg" alt="license">
 </a>
 <a href="https://pypi.python.org/pypi/nonebot-plugin-fakepic">
     <img src="https://img.shields.io/pypi/v/nonebot-plugin-fakepic.svg" alt="pypi">
@@ -46,26 +46,8 @@ nonebot2插件，使用pillow库进行图片绘制
 <summary>使用包管理器安装</summary>
 在 nonebot2 项目的插件目录下, 打开命令行, 根据你使用的包管理器, 输入相应的安装命令
 
-<details>
-<summary>pip</summary>
-
     pip install nonebot-plugin-fakepic
-</details>
-<details>
-<summary>pdm</summary>
 
-    pdm add nonebot-plugin-fakepic
-</details>
-<details>
-<summary>poetry</summary>
-
-    poetry add nonebot-plugin-fakepic
-</details>
-<details>
-<summary>conda</summary>
-
-    conda install nonebot-plugin-fakepic
-</details>
 
 打开 nonebot2 项目根目录下的 `pyproject.toml` 文件, 在 `[tool.nonebot]` 部分追加写入
 
@@ -92,3 +74,5 @@ nonebot2插件，使用pillow库进行图片绘制
 | {QQ号}说{消息内容} | 无 | 否 | 私聊/群聊 | on_regex触发 |
 ### 效果图
 如果有效果图的话
+![command.jpg](https://github.com/lm175/nonebot-plugin-fakepic.git/preview/command.jpg "效果图")
+![result.jpg](https://github.com/lm175/nonebot-plugin-fakepic.git/preview/result.jpg "效果图")
