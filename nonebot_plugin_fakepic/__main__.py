@@ -34,7 +34,7 @@ class SeparateMsg:
 
 
     def _handel_pictures(self) -> tuple[int, int, list[BuildImage]]:
-        max_size = 600 if self.is_only_one_picture else 300
+        max_size = 500 if self.is_only_one_picture else 300
         width_list = []
         pictures = []
         total_height = 0
@@ -103,7 +103,7 @@ class SeparateMsg:
                 fill=(255, 255, 255)
             )
         # 文字
-        p_text = (X + 20, Y + 70)
+        p_text = (X + 22, Y + 70)
         self.text.draw_on_image(BackGround.image, p_text)
         # 图片
         if self.images:

@@ -11,13 +11,13 @@ class Config(BaseModel, extra=Extra.ignore):
     fakepic_message_split: str = " "
 
     """是否为用户添加等级图标, 默认为True"""
-    fakepic_add_level_icon = True
+    fakepic_add_level_icon: bool = True
 
     """是否为官方机器人添加bot图标， 默认为True"""
-    fakepic_add_bot_icon = True
+    fakepic_add_bot_icon: bool = True
 
     """是否删除QQ表情的CQ码， 默认为True"""
-    fakepic_del_cqface = True
+    fakepic_del_cqface: bool = True
 
 
 config = Config.parse_obj(get_driver().config.dict())
