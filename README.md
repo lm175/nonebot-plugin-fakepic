@@ -77,4 +77,4 @@ nonebot2插件，使用pillow库进行图片绘制
 
 ### 效果图
 <img src="https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/command.jpg" width="606" height="826" />
-<img src="https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/result.png" width="600" height="853" />
+<img src="https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/result.png" width="600" height="900" />
