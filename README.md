@@ -66,12 +66,15 @@ nonebot2插件，使用pillow库进行图片绘制
 | fakepic_add_level_icon | 否 | True | 是否为用户添加等级图标 |
 | fakepic_add_bot_icon | 否 | True | 是否为官方机器人添加bot图标 |
 | fakepic_del_cqface | 否 | True | 是否删除QQ表情的CQ码 |
+| fakepic_nick_font | 否 | "simhei" | 昵称字体 |
+| fakepic_chat_font | 否 | "simhei" | 聊天字体 |
 
 ## 🎉 使用
 ### 指令表
 | 指令 | 权限 | 需要@ | 范围 | 说明 |
 |:-----:|:----:|:----:|:----:|:----:|
 | {QQ号}说{消息内容} | 无 | 否 | 私聊/群聊 | on_regex触发 |
+
 ### 效果图
-![command.jpg](https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/command.jpg "效果图")
-![result.jpg](https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/result.png "效果图")
+<img src="https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/command.jpg" width="606" height="826" />
+<img src="https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/result.png" width="450" height="640" />
