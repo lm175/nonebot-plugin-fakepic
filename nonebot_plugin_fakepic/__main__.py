@@ -1,14 +1,18 @@
 from nonebot.plugin import on_regex
-from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message, MessageSegment
+from nonebot.adapters.onebot.v11 import MessageEvent, Message, MessageSegment
 from nonebot.matcher import current_bot
 from nonebot.log import logger
 
 from io import BytesIO
-import re, asyncio, html
+import re, asyncio
 
 from httpx import AsyncClient
 from .config import config
 from .draw import SeparateMsg, draw_pic
+
+USER_SPLIT = re.escape(config.fakepic_user_split)
+MSG_SPLIT = config.fakepic_message_split
+DEL_FACE = config.fakepic_del_cqface
 
 
 async def get_user_name(user_id: int) -> str:
@@ -27,49 +31,47 @@ async def get_user_name(user_id: int) -> str:
     return nick
 
 
-async def handle_CQ(msg: dict) -> dict:
-    """处理消息中的CQ码"""
-    text = msg['text']
+async def handle_message(message: Message) -> dict:
+    """提取Message中的各种字段"""
     images = []
-    # 图片
-    urls = re.findall(r'\[CQ:image,file=.*?url=(.*?)\]', text)
-    text = re.sub(r'\[CQ:image,file=.*?url=(.*?)\]', '', text)
-    for u in urls:
-        async with AsyncClient() as cli:
-            res = await cli.get(html.unescape(u))
-            images.append(BytesIO(res.content))
-    # @某人
-    at_id_list = re.findall(r'\[CQ:at,qq=(\d+)\]', text)
-    for at_id in at_id_list:
-        at_nick = await get_user_name(int(at_id))
-        text = re.sub(r'\[CQ:at,qq=\d+\]', f'@{at_nick} ', text, 1)
-    # 表情
-    if config.fakepic_del_cqface:
-        text = re.sub(r'\[CQ:face,id=\d+\]', '', text)
+    text = ""
+    for seg in message:
+        msgtype = seg.type
+        # 文字
+        if msgtype == "text":
+            text += seg.data.get("text")
+        # @某人
+        elif msgtype == "at":
+            user_name = await get_user_name(seg.data.get("qq"))
+            text += f"@{user_name} "
+        # 表情
+        elif msgtype == "face":
+            text += "" if DEL_FACE else str(seg)
+        # 图片
+        elif msgtype == "image":
+            async with AsyncClient() as cli:
+                res = await cli.get(seg.data.get("url"))
+                images.append(BytesIO(res.content))
     
-    msg['text'] = html.unescape(text)
-    msg['images'] = images
-    return msg
+    msg_dict = {"text": text, "images": images}
+    return msg_dict
 
 
 
 async def trans_to_list(msg: Message) -> list:
     """
     将Message对象拆分成列表
-        [{"user_id": int,"is_robot": bool, "messages": [{"text": str, "images": [BytesIO]}]}, ...]
+        [{"user_id": int, "is_robot": bool, "messages": [{"text": str, "images": [BytesIO]}]}, ...]
     """
-    user_split = re.escape(config.fakepic_user_split)
-    message_split = config.fakepic_message_split
-    s = user_split + str(msg)
-    matches = re.findall(rf'{user_split}(\d{{5,10}})说', s)
-    parts = re.split(rf'{user_split}(\d{{5,10}})说', s)
+    s = USER_SPLIT + str(msg)
+    matches = re.findall(rf'{USER_SPLIT}(\d{{5,10}})说', s)
+    parts = re.split(rf'{USER_SPLIT}(\d{{5,10}})说', s)
     msg_list = []
     for i in range(1, len(parts), 2):
         user_id = int(matches[i // 2])
-        texts = parts[i + 1].split(message_split)
-        messages = [{"text": item, "images": []} for item in texts]
-        for m in messages:
-            m = await handle_CQ(m)
+        messages = parts[i + 1].split(MSG_SPLIT)
+        for j in range(len(messages)):
+            messages[j] = await handle_message(Message(messages[j]))
         is_robot = True if 3889000000 < user_id < 3890000000  else False
         msg_list.append({"user_id": user_id, "is_robot": is_robot, "messages": messages})
 

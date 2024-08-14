@@ -7,6 +7,13 @@ LEVEL = res_path / "level_icon.png"
 
 from pil_utils import Text2Image, BuildImage
 from .config import config
+NICK_FONT = config.fakepic_nick_font
+CHAT_FONT = config.fakepic_chat_font
+NICK_COR = config.fakepic_correct_nick
+TEXT_COR = config.fakepic_correct_chat
+
+BOT_ICON = config.fakepic_add_bot_icon
+LEVEL_ICON = config.fakepic_add_level_icon
 
 
 class SeparateMsg:
@@ -21,7 +28,7 @@ class SeparateMsg:
         self.head = head
         self.nick_name = nick_name
         self.is_robot = is_robot
-        self.text = Text2Image.from_text(text, 32, spacing=16, fontname=config.fakepic_chat_font)
+        self.text = Text2Image.from_text(text, 32, spacing=16, fontname=CHAT_FONT)
         self.images = images
 
     background: BuildImage
@@ -78,18 +85,19 @@ class SeparateMsg:
         # 昵称
         x_nick = X
         if self.is_robot:
-            if config.fakepic_add_bot_icon: # 官方机器人图标
-                icon_width = 30
+            if BOT_ICON: # 官方机器人图标
+                icon_width = 35
                 icon = BuildImage.open(BOT).resize((icon_width, icon_width))
                 BackGround.paste(icon, (x_nick, Y), alpha=True)
                 x_nick += icon_width + 10
         else:
-            if config.fakepic_add_level_icon: # 用户等级图标
+            if LEVEL: # 用户等级图标
                 icon_width = 70
                 icon = BuildImage.open(LEVEL).resize((icon_width, int(icon_width * 0.36)))
                 BackGround.paste(icon, (x_nick, Y + 3), alpha=True)
                 x_nick += icon_width + 10
-        BackGround.draw_text((x_nick, Y + 3), self.nick_name, fontsize=24, fill=(149, 149, 149), fontname=config.fakepic_nick_font)
+        p_nick = (x_nick + NICK_COR[0], Y + NICK_COR[1])
+        BackGround.draw_text(p_nick, self.nick_name, fontsize=22, fill=(149, 149, 149), fontname=NICK_FONT)
         # 气泡
         if self.is_only_one_picture: #消息内容只有一张图片时不画气泡框
             pass
@@ -106,7 +114,7 @@ class SeparateMsg:
                 fill=(255, 255, 255)
             )
         # 文字
-        p_text = (X + 22, Y + 70)
+        p_text = (X + 22 + TEXT_COR[0], Y + 70 + TEXT_COR[1])
         self.text.draw_on_image(BackGround.image, p_text)
         # 图片
         if self.images:
