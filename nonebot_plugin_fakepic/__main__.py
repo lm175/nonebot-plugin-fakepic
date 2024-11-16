@@ -11,15 +11,31 @@ from .config import config
 from .draw import SeparateMsg, draw_pic
 
 USER_SPLIT = re.escape(config.fakepic_user_split)
+NICK_START = re.escape(config.fakepic_nick_start)
+NICK_END = re.escape(config.fakepic_nick_end)
 MSG_SPLIT = config.fakepic_message_split
 DEL_FACE = config.fakepic_del_cqface
+
+
+class MsgInfo:
+    def __init__(self, text: str, images: list[BytesIO]):
+        self.text = text
+        self.images = images
+
+class User:
+    def __init__(self, user_id: int, nick_name: str, is_robot: bool, messages: list[MsgInfo]):
+        self.user_id = user_id
+        self.nick_name = nick_name
+        self.is_robot = is_robot
+        self.messages = messages
 
 
 async def get_user_name(user_id: int) -> str:
     bot = current_bot.get()
     try:
         nick = (await bot.get_stranger_info(user_id=user_id))['nick']
-    except:
+    except Exception as e:
+        logger.error(e)
         try:
             async with AsyncClient() as client:
                 res = await client.get(f"https://api.usuuu.com/qq/{user_id}")
@@ -31,18 +47,18 @@ async def get_user_name(user_id: int) -> str:
     return nick
 
 
-async def handle_message(message: Message) -> dict:
+async def handle_message(message: Message) -> MsgInfo:
     """提取Message中的各种字段"""
-    images = []
+    images: list[BytesIO] = []
     text = ""
     for seg in message:
         msgtype = seg.type
         # 文字
         if msgtype == "text":
-            text += seg.data.get("text")
+            text += seg.data["text"]
         # @某人
         elif msgtype == "at":
-            user_name = await get_user_name(seg.data.get("qq"))
+            user_name = await get_user_name(seg.data["qq"])
             text += f"@{user_name} "
         # 表情
         elif msgtype == "face":
@@ -50,56 +66,59 @@ async def handle_message(message: Message) -> dict:
         # 图片
         elif msgtype == "image":
             async with AsyncClient() as cli:
-                res = await cli.get(seg.data.get("url"))
+                res = await cli.get(seg.data["url"])
                 images.append(BytesIO(res.content))
     
-    msg_dict = {"text": text, "images": images}
-    return msg_dict
+    msg = MsgInfo(text, images)
+    return msg
 
 
 
-async def trans_to_list(msg: Message) -> list:
+async def trans_to_list(msg: Message) -> list[User]:
     """
-    将Message对象拆分成列表
-        [{"user_id": int, "is_robot": bool, "messages": [{"text": str, "images": [BytesIO]}]}, ...]
+    将输入Message对象拆分成对应的列表
     """
-    s = USER_SPLIT + str(msg)
-    matches = re.findall(rf'{USER_SPLIT}(\d{{5,10}})说', s)
-    parts = re.split(rf'{USER_SPLIT}(\d{{5,10}})说', s)
-    msg_list = []
-    for i in range(1, len(parts), 2):
-        user_id = int(matches[i // 2])
-        messages = parts[i + 1].split(MSG_SPLIT)
-        for j in range(len(messages)):
-            messages[j] = await handle_message(Message(messages[j]))
+    s = USER_SPLIT + msg.extract_plain_text()
+    pattern = rf'{USER_SPLIT}(\d{{5,10}})({NICK_START}.*?{NICK_END})?说'
+    matches = re.findall(pattern, s)
+    parts = re.split(pattern, s)
+    users: list[User] = []
+    for i in range(1, len(parts), 3):
+        user_id, nick_name = matches[i // 3]
+        user_id = int(user_id)
+        messages = parts[i + 2].split(MSG_SPLIT)
+        messages = [await handle_message(Message(msg)) for msg in messages]
         is_robot = True if 3889000000 < user_id < 3890000000  else False
-        msg_list.append({"user_id": user_id, "is_robot": is_robot, "messages": messages})
+        users.append(User(user_id, nick_name[1:-1], is_robot, messages))
 
-    return msg_list
+    return users
 
 
 
-matcher = on_regex(r'^\d{5,10}说', priority=10, block=True)
+matcher = on_regex(rf'^\d{{5,10}}({NICK_START}.*?{NICK_END})?说', priority=10, block=True)
 
 @matcher.handle()
 async def handle(event: MessageEvent):
-    msg_list = await trans_to_list(event.get_message())
-    sep_list = []   # 对每一条消息创建一个对象进行绘制
-    user_info = {}  # 存放已获取到的用户信息，减少api请求频率
-    for user in msg_list:
-        user_id = str(user['user_id'])
-        if user_id not in user_info:
+    users = await trans_to_list(event.get_message())
+    sep_list: list[SeparateMsg] = []   # 对每一条消息创建一个对象进行绘制
+    users_info: dict[int, dict] = {}  # 存放已获取到的用户信息，减少api请求频率
+    for user in users:
+        user_id = user.user_id
+        if user_id not in users_info:
             async with AsyncClient() as client:
-                head = await client.get(f"http://q1.qlogo.cn/g?b=qq&nk={user_id}&s=100")
-                img_bytes = BytesIO(head.content)
-                nick_name = await get_user_name(int(user_id))
-                user_info[user_id] = {"head": img_bytes, "nick_name": nick_name}
+                resp = await client.get(f"http://q1.qlogo.cn/g?b=qq&nk={user_id}&s=100") # 头像
+                head_image = BytesIO(resp.content)
+                if not user.nick_name:  # 昵称
+                    nick_name = await get_user_name(user_id)
+                else:
+                    nick_name = user.nick_name
+                users_info[user_id] = {"head": head_image, "nick_name": nick_name}
         else:
-            img_bytes = user_info[user_id]['head']
-            nick_name = user_info[user_id]['nick_name']
+            head_image = users_info[user_id]['head']
+            nick_name = users_info[user_id]['nick_name']
 
-        for m in user['messages']:
-            sep_list.append(SeparateMsg(img_bytes, nick_name, user['is_robot'], m['text'], m['images']))
+        for m in user.messages:
+            sep_list.append(SeparateMsg(head_image, nick_name, user.is_robot, m.text, m.images))
     
     pic = await asyncio.to_thread(draw_pic, sep_list)
     await matcher.send(MessageSegment.image(pic))

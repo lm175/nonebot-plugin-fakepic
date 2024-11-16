@@ -9,11 +9,18 @@ from pil_utils import Text2Image, BuildImage
 from .config import config
 NICK_FONT = config.fakepic_nick_font
 CHAT_FONT = config.fakepic_chat_font
+NICK_FALLBACK = config.fakepic_fallback_nickfonts
+CHAT_FALLBACK = config.fakepic_fallback_chatfont
 NICK_COR = config.fakepic_correct_nick
 TEXT_COR = config.fakepic_correct_chat
 
 BOT_ICON = config.fakepic_add_bot_icon
 LEVEL_ICON = config.fakepic_add_level_icon
+
+
+chatfont_size = 32      # 聊天字体大小
+chatfont_spacing = 8    # 行间距
+nickfont_size = 22      # 昵称字体大小
 
 
 class SeparateMsg:
@@ -28,7 +35,7 @@ class SeparateMsg:
         self.head = head
         self.nick_name = nick_name
         self.is_robot = is_robot
-        self.text = Text2Image.from_text(text, 32, spacing=16, fontname=CHAT_FONT)
+        self.text = Text2Image.from_text(text, chatfont_size, spacing=chatfont_spacing, fontname=CHAT_FONT, fallback_fonts=CHAT_FALLBACK)
         self.images = images
 
     background: BuildImage
@@ -81,7 +88,7 @@ class SeparateMsg:
         # 头像
         head_img = BuildImage.open(self.head)
         circle_head = head_img.circle().resize((85, 85))
-        BackGround.paste(circle_head, (50, Y), circle_head)
+        BackGround.paste(circle_head, (50, Y), True)
         # 昵称
         x_nick = X
         if self.is_robot:
@@ -97,7 +104,7 @@ class SeparateMsg:
                 BackGround.paste(icon, (x_nick, Y + 3), alpha=True)
                 x_nick += icon_width + 10
         p_nick = (x_nick + NICK_COR[0], Y + NICK_COR[1])
-        BackGround.draw_text(p_nick, self.nick_name, fontsize=22, fill=(149, 149, 149), fontname=NICK_FONT)
+        BackGround.draw_text(p_nick, self.nick_name, fontsize=nickfont_size, fill=(149, 149, 149), fontname=NICK_FONT, fallback_fonts=NICK_FALLBACK)
         # 气泡
         if self.is_only_one_picture: #消息内容只有一张图片时不画气泡框
             pass

@@ -28,7 +28,7 @@ _✨ NoneBot伪造聊天截图插件 ✨_
 
 nonebot2插件，使用pillow库进行图片绘制
 
-使用示例: 3889009218说你好像误会了什么 你才是挑战者+1980765716说龙鳞，反反，成双之流星+3889009218说抱歉没能让宿傩大人尽兴
+使用示例: 3889009218【2.5条悟】说你好像误会了什么 你才是挑战者+1980765716说龙鳞，反反，成双之流星+3889009218说抱歉没能让宿傩大人尽兴
 
 ## 💿 安装
 
@@ -61,11 +61,15 @@ nonebot2插件，使用pillow库进行图片绘制
 |:-----:|:----:|:----:|:----:|
 | fakepic_user_split | 否 | "+" | 分隔不同用户的符号 |
 | fakepic_message_split | 否 | " " | 分隔同一用户的几条消息 |
+| fakepic_nick_start | 否 | "【" | 获取昵称的起始符号 |
+| fakepic_nick_end | 否 | "】" | 获取昵称的终止符号 |
 | fakepic_add_level_icon | 否 | True | 是否为用户添加等级图标 |
 | fakepic_add_bot_icon | 否 | True | 是否为官方机器人添加bot图标 |
 | fakepic_del_cqface | 否 | True | 是否删除QQ表情的CQ码 |
-| fakepic_nick_font | 否 | "" | 昵称字体 |
-| fakepic_chat_font | 否 | "" | 聊天字体 |
+| fakepic_nick_font | 否 | "" | 昵称首选字体 |
+| fakepic_chat_font | 否 | "" | 聊天首选字体 |
+| fakepic_fallback_nickfonts | 否 | [] | 昵称备选字体 |
+| fakepic_fallback_chatfont | 否 | [] | 聊天备选字体 |
 
 若添加字体配置后文字位置发生较大偏移，可添加以下配置进行修正
 
@@ -78,8 +82,15 @@ nonebot2插件，使用pillow库进行图片绘制
 ### 指令表
 | 指令 | 权限 | 需要@ | 范围 | 说明 |
 |:-----:|:----:|:----:|:----:|:----:|
-| {QQ号}说{消息内容} | 无 | 否 | 私聊/群聊 | on_regex触发 |
+| <QQ号>说<消息内容> | 无 | 否 | 私聊/群聊 | 分隔符号可在配置中修改 |
+| <QQ号>【用户昵称】说<消息内容> | 无 | 否 | 私聊/群聊 | 指定用户昵称 |
+
 
 ### 效果图
 <img src="https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/command.jpg" width="606" height="826" />
 <img src="https://github.com/lm175/nonebot-plugin-fakepic/blob/master/preview/result.png" width="450" height="640" />
+
+## 更新日志
+### [0.2.0] - 2024-11-16
+- 可在指令中通过【】符号指定用户的昵称
+- 增加备选字体的配置项
