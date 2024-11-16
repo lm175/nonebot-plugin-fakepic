@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "nonebot-plugin-fakepic"
-version = "0.1.0"
+version = "0.2.0"
 description = "A nonebot plugin for fake chat screenshots"
 authors = ["lm175 <17736762488@163.com>"]
 license = "MIT"
 readme = "README.md"
+homepage = "https://github.com/lm175/nonebot-plugin-fakepic"
 
 [tool.poetry.dependencies]
 python = "^3.10"
