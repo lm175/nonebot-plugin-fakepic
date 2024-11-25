@@ -78,7 +78,7 @@ async def trans_to_list(msg: Message) -> list[User]:
     """
     将输入Message对象拆分成对应的列表
     """
-    s = USER_SPLIT + msg.extract_plain_text()
+    s = USER_SPLIT + str()
     pattern = rf'{USER_SPLIT}(\d{{5,10}})({NICK_START}.*?{NICK_END})?说'
     matches = re.findall(pattern, s)
     parts = re.split(pattern, s)
