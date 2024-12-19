@@ -33,14 +33,14 @@ class User:
 async def get_user_name(user_id: int) -> str:
     bot = current_bot.get()
     try:
-        nick = (await bot.get_stranger_info(user_id=user_id))['nick']
+        nick = (await bot.get_stranger_info(user_id=user_id))['nickname']
     except Exception as e:
         logger.error(e)
         try:
             async with AsyncClient() as client:
-                res = await client.get(f"https://api.usuuu.com/qq/{user_id}")
+                res = await client.get(f"https://api.leafone.cn/api/qqnick?qq={user_id}")
                 data = res.json()
-                nick = data.get("data").get("name")
+                nick = data.get("data").get("nickname")
         except Exception as e:
             logger.error(e)
             nick = "QQ用户"
