@@ -1,9 +1,11 @@
-from pydantic import BaseModel, field_validator
+import pydantic
+from pydantic import BaseModel
 from nonebot import get_plugin_config
 
+# 判断当前 Pydantic 版本
+IS_PYDANTIC_V2 = pydantic.VERSION[0] == 2
 
 class Config(BaseModel):
-
     fakepic_user_split: str = "+"
     """分隔不同用户的符号"""
 
@@ -13,7 +15,7 @@ class Config(BaseModel):
     fakepic_nick_start: str = "【"
     """获取昵称位置的起始符号"""
     
-    fakepic_nick_end:   str = "】"
+    fakepic_nick_end: str = "】"
     """获取昵称位置的终止符号"""
 
     fakepic_add_level_icon: bool = True
@@ -37,18 +39,32 @@ class Config(BaseModel):
     fakepic_fallback_chatfont: list[str] = []
     """聊天备选字体"""
 
-    fakepic_correct_nick: list[int] = [0, 0]    # 昵称字体
-    fakepic_correct_chat: list[int] = [0, 0]    # 聊天字体
+    fakepic_correct_nick: list[int] = [0, 0]  # 昵称字体
+    fakepic_correct_chat: list[int] = [0, 0]  # 聊天字体
     """如果文字位置发生偏移，可视情况修改此项进行修正"""
 
-    @field_validator("fakepic_nick_start", "fakepic_nick_end")
-    @classmethod
-    def check_str(cls, s: str) -> str:
-        ban = ['[', ']', '&']   # 被转义的符号
-        if s not in ban:
-            return s
-        raise ValueError(f"“{s}” 请勿使用该字符获取昵称！")
+    if IS_PYDANTIC_V2:
+        # Pydantic v2 使用 @field_validator
+        from pydantic import field_validator
 
+        @field_validator("fakepic_nick_start", "fakepic_nick_end")
+        @classmethod
+        def check_str(cls, s: str) -> str:
+            ban = ['[', ']', '&']  # 被转义的符号
+            if s not in ban:
+                return s
+            raise ValueError(f"“{s}” 请勿使用该字符获取昵称！")
+    else:
+        # Pydantic v1 使用 @validator
+        from pydantic import validator
+
+        @validator("fakepic_nick_start", "fakepic_nick_end")
+        @classmethod
+        def check_str(cls, value: str) -> str:
+            ban = ['[', ']', '&']  # 被转义的符号
+            if value not in ban:
+                return value
+            raise ValueError(f"“{value}” 请勿使用该字符获取昵称！")
 
 
 config = get_plugin_config(Config)
